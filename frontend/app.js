@@ -20,7 +20,7 @@ var checkUserAccess = function(){
       document.getElementById('login').style.display = "none";
       document.getElementById('table').style.display = "block"; 
     }
-    else {
+    else  {
       document.getElementById('login').style.display = "block";
       document.getElementById('table').style.display = "none"; 
     }
@@ -31,6 +31,7 @@ var checkUserAccess = function(){
   } 
 
 checkUserAccess();
+
 
 var loginEmployee = function(){  
   event.preventDefault();
@@ -58,8 +59,8 @@ var loginEmployee = function(){
     })
     .then(response => response.json())
     .then(data => {
+       console.log("Login Response",data);
        if(Object.keys(data).length == 0) {
-         console.log("Error");
          checkUserAccess();
        }
        else {
@@ -69,8 +70,9 @@ var loginEmployee = function(){
        }
     })
     .catch((error) => {
+      alert('Email or Password are incorrect');
       console.log('Error:', error);
-    });
+    }); 
   } 
 var cleanUpEmpList = function() {
     document
@@ -92,7 +94,6 @@ var renderUserList = function(userList) {
     html = `<tr>
     <td>%name%</td>
     <td>%email%</td>
-    <td>%password%</td>
     <td>%empcode%</d>
     <td>%phoneNumber%</td>
     <td>
@@ -103,7 +104,6 @@ var renderUserList = function(userList) {
 
     newHtml = html.replace('%name%', userList[i].name ?  userList[i].name : '--' );
     newHtml = newHtml.replace('%email%',userList[i].email);
-    newHtml = newHtml.replace('%password%' ,userList[i].password)
     newHtml = newHtml.replace('%phoneNumber%', userList[i].phone ? userList[i].phone : '--' );
     newHtml = newHtml.replace('%empcode%',userList[i].empcode ? userList[i].empcode : '--')
     document
@@ -147,11 +147,11 @@ var getEmployee = function(index) {
   .then(response => response.json())
   .then(data => {
     console.log('Success:', data);
-    document.editform.editName.value = data.name
-    document.editform.editEmail.value  =  data.email 
-    document.editform.editPassword.value = data.password
-    document.editform.editEmpcode.value = data.empcode
-    document.editform.editPhone.value = data.phone
+    document.editform.editName.value = (data.name != undefined) ? data.name : '';
+    document.editform.editEmail.value  = (data.email != undefined) ? data.email : '';
+    document.editform.editPassword.value = (data.password != undefined) ? data.password : '';
+    document.editform.editEmpcode.value = (data.empcode != undefined) ? data.empcode : '';
+    document.editform.editPhone.value = (data.phone != undefined) ? data.phone : '';
   })
   .catch((error) => {
     console.log('Error:', error);

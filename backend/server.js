@@ -3,6 +3,7 @@ const express = require('express');
 var jwt = require('jsonwebtoken');
 const app = express();
 const db = require('./connection');
+const bcrypt = require('bcrypt');
 const employeeModel = require('./employeeModel');
 app.use(express.urlencoded({extended:true}));
 app.use(express.json());
@@ -12,12 +13,13 @@ app.use(cors());
 // logIN
 app.post('/login',async(req, res)=>{
     console.log("login test");
-    const{email,password} = req.body;
+    var {email,password} = req.body;
     try{
        let employee = await employeeModel.findOne({email:email})
         if(employee) {
-            let employeeCheck = await employeeModel.findOne({email:email,password:password});
-            if(employeeCheck) 
+            let employeeCheck = await employeeModel.findOne({email:email});
+            let checkPassword = await bcrypt.compare(password,employeeCheck.password);
+            if(employeeCheck && checkPassword == true) 
             {
                 let token = jwt.sign(
                     {
@@ -30,10 +32,11 @@ app.post('/login',async(req, res)=>{
                 return res.json(token);
             }
             else {
-                return res.status(500).json("Unauthroized User");
+                return res.status(500).send("Unauthorized User");
             }
         }
         else {
+        password = await bcrypt.hash(password,5);
         const newEmployee = await employeeModel.create({email,password});
         let token = jwt.sign(
             {
@@ -47,6 +50,7 @@ app.post('/login',async(req, res)=>{
         }
        }
     catch(error){
+        console.log(error);
         res.status(500).send(error)
     }
 });
@@ -54,9 +58,10 @@ app.post('/login',async(req, res)=>{
 // crud applications
 app.post('/',async(req, res)=>{
     console.log("TEST LIST");
-    const{name,email,password,empcode,phone} = req.body;
+    var {name,email,password,empcode,phone} = req.body;
     console.log(name,email,password,phone);
     try{
+        password = await bcrypt.hash(password,5);
         const newEmployee = await employeeModel.create({name,email,password,empcode,phone});
         console.log(newEmployee,"vgjhgvjhgmj");
         res.json(newEmployee)
@@ -89,8 +94,9 @@ app.get('/:id', async(req, res)=>{
 }) 
 app.put('/:id', async(req, res)=> {
     const id = req.params.id;
-    const {name,email,password,empcode,phone} = req.body;
+    var {name,email,password,empcode,phone} = req.body;
     try {
+        password = await bcrypt.hash(password,5);
         const newEmployee = await employeeModel.findByIdAndUpdate(id, {name,email,password,empcode,phone});
         res.json(newEmployee);
         

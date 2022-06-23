@@ -1,6 +1,6 @@
 <!DOCTYPE html>
 <html lang="en">
-<head>
+    <head>
     <meta charset="UTF-8">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -87,7 +87,6 @@
                         <tr>
                             <th>Name</th>
                             <th>Email</th>
-                            <th>PassWord</th>
                             <th>EMP-Code</th>
                             <th>Phone</th>
                             <th>Actions</th>
@@ -129,7 +128,7 @@
                     </div>
                     <div class="modal-footer">
                         <input type="button" class="btn btn-default" data-dismiss="modal" value="Cancel">
-                        <input type="submit" id="add" onclick="createEmployee()" class="btn btn-success" value="Add">
+                        <input type="submit" id="add" onclick="createEmployee()"  data-dismiss="modal" class="btn btn-success" value="Add">
                     </div>
                 </form>
             </div>
@@ -168,7 +167,7 @@
                     </div>
                     <div class="modal-footer">
                         <input type="button" class="btn btn-default" data-dismiss="modal" value="Cancel">
-                        <input type="submit" class="btn btn-info" onclick="editEmployee()" value="Save">
+                        <input type="submit" class="btn btn-info" onclick="editEmployee()"  data-dismiss="modal" value="Save">
                     </div>
                 </form>
             </div>
